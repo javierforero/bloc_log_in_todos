@@ -1,8 +1,11 @@
+import 'package:bloc_log_in_todos/blocs/login-bloc.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final loginBloc = LoginBloc();
+
     return Scaffold(
       appBar: PreferredSize(
         child: AppBar(
@@ -34,15 +37,25 @@ class LoginPage extends StatelessWidget {
             SizedBox(
               height: 50.0,
             ),
-            TextField(
-              decoration: InputDecoration(labelText: 'EMAIL'),
+            StreamBuilder<String>(
+              stream: loginBloc.email,
+              builder: (BuildContext context, AsyncSnapshot snapshot) =>
+                  TextField(
+                    onChanged: loginBloc.emailChanged(snapshot.data),
+                    decoration: InputDecoration(labelText: 'EMAIL'),
+                  ),
             ),
             SizedBox(
               height: 20.0,
             ),
-            TextField(
-              decoration: InputDecoration(labelText: 'PASSWORD'),
-              obscureText: true,
+            StreamBuilder<String>(
+              stream: loginBloc.password,
+              builder: (BuildContext context, AsyncSnapshot snapshot) =>
+                  TextField(
+                    onChanged: loginBloc.passwordChanged(snapshot.data),
+                    decoration: InputDecoration(labelText: 'PASSWORD'),
+                    obscureText: true,
+                  ),
             ),
             SizedBox(
               height: 50.0,
@@ -50,18 +63,25 @@ class LoginPage extends StatelessWidget {
             Row(
               children: <Widget>[
                 Expanded(
-                  child: FlatButton(
-                    padding: EdgeInsets.all(18.0),
-                    child: Text(
-                      'Log in',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17.0,
-                        color: Color(0xFFFFFFFF),
-                      ),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {},
+                  child: StreamBuilder<bool>(
+                    stream: loginBloc.submitCheck,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) =>
+                        FlatButton(
+                          padding: EdgeInsets.all(18.0),
+                          disabledColor: Colors.grey,
+                          color: Theme.of(context).primaryColor,
+                          onPressed: snapshot.hasData
+                              ? () => loginBloc.submit(snapshot)
+                              : null,
+                          child: Text(
+                            'Log in',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17.0,
+                              color: Color(0xFFFFFFFF),
+                            ),
+                          ),
+                        ),
                   ),
                 ),
               ],

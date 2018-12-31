@@ -2,7 +2,6 @@ import 'package:bloc_log_in_todos/pages/home-page.dart';
 import 'package:bloc_log_in_todos/pages/login-page.dart';
 import 'package:bloc_log_in_todos/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFF0057FF),
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
-//        accentColor: Color(0xFF0057FF),
+        disabledColor: Colors.grey,
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
