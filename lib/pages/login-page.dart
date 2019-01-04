@@ -38,22 +38,25 @@ class LoginPage extends StatelessWidget {
               height: 50.0,
             ),
             StreamBuilder<String>(
-              stream: loginBloc.email,
-              builder: (BuildContext context, AsyncSnapshot snapshot) =>
-                  TextField(
-                    onChanged: loginBloc.emailChanged(snapshot.data),
-                    decoration: InputDecoration(labelText: 'EMAIL'),
+              stream: loginBloc.emailStream,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) => TextField(
+                    onChanged: loginBloc.emailChanged,
+                    decoration: InputDecoration(
+                        labelText: 'EMAIL', errorText: snapshot.error),
+                    keyboardType: TextInputType.emailAddress,
                   ),
             ),
             SizedBox(
               height: 20.0,
             ),
             StreamBuilder<String>(
-              stream: loginBloc.password,
-              builder: (BuildContext context, AsyncSnapshot snapshot) =>
-                  TextField(
-                    onChanged: loginBloc.passwordChanged(snapshot.data),
-                    decoration: InputDecoration(labelText: 'PASSWORD'),
+              stream: loginBloc.passwordStream,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) => TextField(
+                    onChanged: loginBloc.passwordChanged,
+                    decoration: InputDecoration(
+                      labelText: 'PASSWORD',
+                      errorText: snapshot.error,
+                    ),
                     obscureText: true,
                   ),
             ),
@@ -64,28 +67,28 @@ class LoginPage extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: StreamBuilder<bool>(
-                    stream: loginBloc.submitCheck,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) =>
-                        FlatButton(
-                          padding: EdgeInsets.all(18.0),
-                          disabledColor: Colors.grey,
-                          color: Theme.of(context).primaryColor,
-                          onPressed: snapshot.hasData
-                              ? () => loginBloc.submit(snapshot)
-                              : null,
-                          child: Text(
-                            'Log in',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17.0,
-                              color: Color(0xFFFFFFFF),
-                            ),
+                    stream: loginBloc.submitValid,
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      debugPrint('called button builder $snapshot');
+                      return FlatButton(
+                        padding: EdgeInsets.all(18.0),
+                        disabledColor: Colors.grey,
+                        color: Theme.of(context).primaryColor,
+                        onPressed: snapshot.hasData ? () {print('sucess');} : null,
+                        child: Text(
+                          'Log in',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17.0,
+                            color: Color(0xFFFFFFFF),
                           ),
                         ),
+                      );
+                    }
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

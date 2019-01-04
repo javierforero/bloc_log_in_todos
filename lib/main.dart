@@ -7,6 +7,7 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  final login = LoginPage();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
           return HomePage();
         },
         LoginAppRoutes.login: (context) {
-          return LoginPage();
+          return login;
         }
       },
     );
