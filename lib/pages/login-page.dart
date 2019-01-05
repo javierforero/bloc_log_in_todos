@@ -2,9 +2,24 @@ import 'package:bloc_log_in_todos/blocs/login-bloc.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
+  void onLoading(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Text('hiii'),
+          );
+        }
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final loginBloc = LoginBloc();
+
+    if (loginBloc.isSaving) {
+      print('hiiii im in view');
+    }
 
     return Scaffold(
       appBar: PreferredSize(
@@ -39,7 +54,8 @@ class LoginPage extends StatelessWidget {
             ),
             StreamBuilder<String>(
               stream: loginBloc.emailStream,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) => TextField(
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
+                  TextField(
                     onChanged: loginBloc.emailChanged,
                     decoration: InputDecoration(
                         labelText: 'EMAIL', errorText: snapshot.error),
@@ -51,7 +67,8 @@ class LoginPage extends StatelessWidget {
             ),
             StreamBuilder<String>(
               stream: loginBloc.passwordStream,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) => TextField(
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) =>
+                  TextField(
                     onChanged: loginBloc.passwordChanged,
                     decoration: InputDecoration(
                       labelText: 'PASSWORD',
@@ -67,25 +84,32 @@ class LoginPage extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: StreamBuilder<bool>(
-                    stream: loginBloc.submitValid,
-                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                      debugPrint('called button builder $snapshot');
-                      return FlatButton(
-                        padding: EdgeInsets.all(18.0),
-                        disabledColor: Colors.grey,
-                        color: Theme.of(context).primaryColor,
-                        onPressed: snapshot.hasData ? () {print('sucess');} : null,
-                        child: Text(
-                          'Log in',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17.0,
-                            color: Color(0xFFFFFFFF),
+                      stream: loginBloc.submitValid,
+                      builder:
+                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                        return FlatButton(
+                          padding: EdgeInsets.all(18.0),
+                          disabledColor: Colors.grey,
+                          color: Theme.of(context).primaryColor,
+                          onPressed: snapshot.hasData
+                              ? () {
+                                  onLoading(context);
+                                  loginBloc.submit().then((value) {
+                                    // hide spinner on true
+                                    Navigator.of(context).pop();
+                                  });
+                                }
+                              : null,
+                          child: Text(
+                            'Log in',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17.0,
+                              color: Color(0xFFFFFFFF),
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  ),
+                        );
+                      }),
                 ),
               ],
             ),
