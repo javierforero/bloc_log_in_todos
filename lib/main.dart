@@ -8,15 +8,17 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   final login = LoginPage();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bloc Login/Todo',
       theme: ThemeData().copyWith(
-        primaryColor: Color(0xFF0057FF),
+        primaryColor: Colors.white,
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
         disabledColor: Colors.grey,
+        dialogBackgroundColor: Color.fromRGBO(35, 35, 35, 0.73),
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
